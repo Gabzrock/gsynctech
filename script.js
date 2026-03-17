@@ -1,4 +1,4 @@
-// Initialize Drag and Drop when the page loads
+   // Initialize Drag and Drop when the page loads
     window.onload = function() {
         document.getElementById('quoteDate').valueAsDate = new Date();
         
@@ -28,7 +28,6 @@
     }
 
     function removeRow(btn) {
-        // Added Confirmation Prompt Here
         if(confirm("Are you sure you want to delete this item?")) {
             const row = btn.closest('tr');
             row.parentNode.removeChild(row);
