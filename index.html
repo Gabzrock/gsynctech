@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Qoutation Builder</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RC17 Computer & CCTV - Pro Quotation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+   
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-ui">
+        <img src="https://raw.githubusercontent.com/Gabzrock/gsynctech/refs/heads/main/1773747946356%20(1).png" alt="RC17 Logo" class="company-logo">
+        <div>
+            <h2 style="margin:0;">RC17 Quotation Builder</h2>
+            <p style="color: #7f8c8d; margin: 4px 0; font-size: 0.85em;">Create formal CCTV proposals with embedded local images</p>
+        </div>
+    </div>
+    
+    <div class="client-grid">
+        <div class="input-group">
+            <label>Date</label>
+            <input type="date" id="quoteDate">
+        </div>
+        <div class="input-group">
+            <label>Client / Company Name</label>
+            <input type="text" id="clientName" placeholder="e.g. Southville Subd. Office">
+        </div>
+        <div class="input-group">
+            <label>Installation Address</label>
+            <input type="text" id="clientAddress" placeholder="e.g. Phase 1, Block 2, Imus">
+        </div>
+        <div class="input-group">
+            <label>Contact Number</label>
+            <input type="text" id="clientContact" placeholder="e.g. 0912 345 6789">
+        </div>
+    </div>
+
+    <h3 class="section-title">Hardware / Equipment</h3>
+    <div class="table-responsive">
+        <table class="web-table">
+            <thead>
+                <tr>
+                    <th style="width: 30px;"></th> <th style="width: 140px;">Item Model/Code</th>
+                    <th>Description / Specs</th>
+                    <th style="width: 130px;">Upload Image</th>
+                    <th style="width: 70px;">Qty</th>
+                    <th style="width: 110px;">Price (₱)</th>
+                    <th style="width: 110px;">Total</th>
+                    <th style="width: 40px; text-align: center;"></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr>
+                    <td class="drag-handle" title="Drag to reorder">☰</td>
+                    <td><input type="text" class="item-code" placeholder="DS-2CE16D0T"></td>
+                    <td><input type="text" class="item-desc" placeholder="Hikvision 2MP Outdoor Bullet Camera"></td>
+                    <td>
+                        <input type="file" accept="image/*" onchange="previewImage(this)">
+                        <img class="img-preview-box" src="">
+                    </td>
+                    <td><input type="number" class="item-qty" value="1" onchange="calculate()"></td>
+                    <td><input type="number" class="item-price" value="0" onchange="calculate()"></td>
+                    <td class="item-total" style="font-weight:bold;">₱ 0.00</td>
+                    <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)" title="Delete Row">✖</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-add" onclick="addRow()">+ Add Equipment Row</button>
+
+    <h3 class="section-title">Service Fees / Labor</h3>
+    <div class="table-responsive">
+        <table class="web-table">
+            <thead>
+                <tr>
+                    <th style="width: 30px;"></th> <th>Service Description</th>
+                    <th style="width: 70px;">Qty/Meters</th>
+                    <th style="width: 110px;">Rate (₱)</th>
+                    <th style="width: 110px;">Total</th>
+                    <th style="width: 40px; text-align: center;"></th>
+                </tr>
+            </thead>
+            <tbody id="serviceTableBody">
+                <tr>
+                    <td class="drag-handle" title="Drag to reorder">☰</td>
+                    <td><input type="text" class="service-desc" placeholder="Standard Installation & Configuration"></td>
+                    <td><input type="number" class="service-qty" value="1" onchange="calculate()"></td>
+                    <td><input type="number" class="service-price" value="0" onchange="calculate()"></td>
+                    <td class="service-total" style="font-weight:bold;">₱ 0.00</td>
+                    <td style="text-align: center;"><button class="btn-delete" onclick="removeRow(this)" title="Delete Row">✖</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-add-service" onclick="addServiceRow()">+ Add Service Row</button>
+
+    <div class="total-section">
+        Grand Total: <span id="grandTotal">₱ 0.00</span>
+        <div class="price-note">* Note: Prices may vary and are subject to change.</div>
+    </div>
+
+    <hr style="margin: 25px 0; border: 0; border-top: 1px solid #ddd;">
+
+    <div class="input-group">
+        <label>Additional Notes / Installation Instructions (Optional)</label>
+        <textarea id="clientNotes" rows="2" placeholder="e.g. Extra cabling beyond 20m will be billed at ₱25/meter."></textarea>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-clear" onclick="clearForm()">Clear Form</button>
+        <button class="btn btn-download-img" onclick="generateImage()">Generate as Image</button>
+    </div>
+</div>
+
+<div id="doc-container">
+    <div id="doc-content">
+        
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #1a252f; padding-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="https://raw.githubusercontent.com/Gabzrock/gsynctech/refs/heads/main/1773747946356%20(1).png" crossorigin="anonymous" style="height: 50px; object-fit: contain; border-radius: 8px;">
+                <div>
+                    <h1 style="margin:0; color: #1a252f; font-size: 20px;">RC17 Computer & CCTV</h1>
+                    <p style="margin: 2px 0; font-size: 11px; font-weight: 500;">Professional Security Systems & IT Services</p>
+                    <small style="color: #555; line-height: 1.3; display: block; font-size: 10px;">
+                        2nd Floor CGI Bldg. 25 Gilmore Ave, corner Aurora Blvd, Quezon City<br>
+                        Contact: 09948931534 / 09696358461 | Email: rc17cc@gmail.com
+                    </small>
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <h2 style="margin:0; color: #95a5a6; font-size: 18px;">OFFICIAL QUOTATION</h2>
+                <p style="margin: 4px 0; font-size: 11px;">Date: <span id="doc-date"></span></p>
+            </div>
+        </div>
+
+        <div style="margin: 15px 0; background: #f9f9f9; padding: 10px 12px; border-left: 4px solid #1a252f;">
+            <strong style="text-transform: uppercase; font-size: 10px; color: #7f8c8d;">Bill To:</strong><br>
+            <span id="doc-client-name" style="font-size: 15px; font-weight: bold; color: #000;"></span><br>
+            <span id="doc-client-address" style="font-size: 11px; color: #333; display: block; margin-top: 2px;"></span>
+            <span id="doc-client-contact" style="font-size: 11px; color: #333; display: block; margin-top: 2px;"></span>
+        </div>
+
+        <h4 style="margin: 0 0 6px 0; color: #1a252f; font-size: 12px; text-transform: uppercase;">Equipment / Hardware</h4>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 10px;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="padding: 6px; text-align: center; border-bottom: 1px solid #ddd; width: 50px;">Image</th>
+                    <th style="padding: 6px; text-align: left; border-bottom: 1px solid #ddd; width: 100px;">Item Code</th>
+                    <th style="padding: 6px; text-align: left; border-bottom: 1px solid #ddd;">Description</th>
+                    <th style="padding: 6px; text-align: center; border-bottom: 1px solid #ddd; width: 35px;">Qty</th>
+                    <th style="padding: 6px; text-align: right; border-bottom: 1px solid #ddd; width: 80px;">Unit Price</th>
+                    <th style="padding: 6px; text-align: right; border-bottom: 1px solid #ddd; width: 80px;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="doc-items-list"></tbody>
+        </table>
+
+        <div id="doc-services-wrapper" style="display: none; margin-bottom: 15px;">
+            <h4 style="margin: 0 0 6px 0; color: #1a252f; font-size: 12px; text-transform: uppercase;">Service Fees / Labor</h4>
+            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        <th style="padding: 6px; text-align: left; border-bottom: 1px solid #ddd;">Description</th>
+                        <th style="padding: 6px; text-align: center; border-bottom: 1px solid #ddd; width: 35px;">Qty</th>
+                        <th style="padding: 6px; text-align: right; border-bottom: 1px solid #ddd; width: 80px;">Rate</th>
+                        <th style="padding: 6px; text-align: right; border-bottom: 1px solid #ddd; width: 80px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="doc-services-list"></tbody>
+            </table>
+        </div>
+
+        <div style="text-align: right; margin-top: 10px; border-top: 2px solid #eee; padding-top: 10px;">
+            <p style="font-size: 14px; font-weight: bold; margin:0;">Grand Total: <span id="doc-total-val" style="color: #1a252f;"></span></p>
+            <p style="font-size: 10px; color: #e74c3c; font-style: italic; margin-top: 4px;">* Note: Prices may vary and are subject to change.</p>
+        </div>
+
+        <div id="doc-notes-section" style="margin-top: 15px; display: none; background: #fffbe6; padding: 10px; border-left: 4px solid #f1c40f;">
+            <h4 style="margin: 0 0 4px 0; color: #d35400; font-size: 11px;">Notes / Special Instructions:</h4>
+            <div id="doc-notes-content" style="font-size: 10px; line-height: 1.4; white-space: pre-wrap; color: #333;"></div>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 10px; line-height: 1.5; color: #555;">
+            <h4 style="margin-bottom: 4px; color: #000; font-size: 11px;">Terms and Conditions:</h4>
+            1. All prices are subject to change without prior notice.<br>
+            2. 1-Year Warranty on DVR/NVR and Cameras. Labor carries 3-month warranty.<br>
+            3. Validity: This quotation is valid for 14 days.<br>
+            4. Payment: 50% reservation fee, 50% upon successful turnover.
+        </div>
+        
+        <div style="margin-top: 30px; display: flex; justify-content: space-between; page-break-inside: avoid;">
+            <div style="width: 180px; text-align: center;">
+                <div style="border-bottom: 1px solid #333; height: 25px;"></div>
+                <p style="margin-top: 4px; font-size: 10px; color: #333;">Conforme (Client Signature)</p>
+            </div>
+            <div style="width: 180px; text-align: center;">
+                <div style="border-bottom: 1px solid #333; height: 25px; position: relative;">
+                    <span style="position: absolute; bottom: 2px; left: 0; width: 100%; font-family: cursive; font-size: 16px;">RC17 CCTV</span>
+                </div>
+                <p style="margin-top: 4px; font-size: 10px; color: #333;">Prepared By</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+ 
+</script>
+
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
